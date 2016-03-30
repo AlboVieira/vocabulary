@@ -16,12 +16,9 @@ class TypeWord extends Model
 
         $types = self::all();
         if($isArray){
-            $dados = [];
+            $dados = ['0' => '-- Selecione --'];
             foreach($types as $type){
-                $dados[$type->id] = $type->desc;
-            }
-            if($forForm){
-                array_unshift($dados, '-- Selecione --');
+                $dados[$type->id]= $type->desc;
             }
             return $dados;
         }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\Words;
+use App\Models\Words;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -48,8 +48,12 @@ class WordsController extends Controller
     public function newWord(Request $request)
     {
         try{
-            $words = $this->wordRepository->save($request->all());
-            $json = response()->json(['success'=>true,'words' => $words]);
+            $words = $this->wordRepository->saveWord($request->all());
+            if($words){
+                $json = response()->json(['success'=>true,'words' => $words]);
+            }else{
+                $json = response()->json(['success'=>false,'erro' => 'Palavra já Existe']);
+            }
         }catch(Exception $e){
             $json = response()->json(['success'=>false,'erro' => $e->getMessage()]);
         }

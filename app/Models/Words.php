@@ -23,8 +23,17 @@ class Words extends Model
         return $this->hasOne('App\Models\TypeWord', 'id','id_tipo');
     }
 
-    public static function getStatus(){
+    /**
+     * Get the comments for the blog post.
+     */
+    public function sentences()
+    {
+        return $this->hasMany('App\Models\Sentences');
+    }
+
+    public static function getStatus($forForm = true){
         return [
+            '0' => '-- Selecione --',
             WordConstant::STATUS_KNOW_VAL => WordConstant::STATUS_KNOW_LBL,
             WordConstant::STATUS_ALMOST_VAL => WordConstant::STATUS_ALMOST_LBL,
             WordConstant::STATUS_DONT_KNOW_VAL => WordConstant::STATUS_DONT_KNOW_LBL

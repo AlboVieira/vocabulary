@@ -1,7 +1,6 @@
 app.controller('WordsController', function ($scope,$http,ngNotify,HttpService,API_URL) {
 
     $scope.data = {};
-
     var listWords = function(word){
         var callback = function(data){
             var knowledge = data['know'];
@@ -21,12 +20,20 @@ app.controller('WordsController', function ($scope,$http,ngNotify,HttpService,AP
     $scope.showModal = false;
     $scope.toggleModal = function(param){
         $scope.showModal = !$scope.showModal;
+
+        $scope.data.id = '';
+        $scope.data.word = '';
+        $scope.data.status = '0';
+        $scope.data.meanning = '';
+        $scope.data.id_tipo = '0';
+
         if(param != undefined){
+
             $scope.data.id = param.id;
             $scope.data.word = param.word;
             $scope.data.status = param.status;
             $scope.data.meanning = param.meanning;
-            $scope.data.id_tipo = param.typeId;
+            $scope.data.id_tipo = param.typeId.toString();
         }
     };
 
@@ -37,7 +44,7 @@ app.controller('WordsController', function ($scope,$http,ngNotify,HttpService,AP
                ngNotify.set('Operacao realizada com sucesso.');
                $scope.showModal = false;
            }else{
-               ngNotify.set('Erro ao realizar a operação.');
+               ngNotify.set('Erro ao realizar a operação.','error');
            }
         };
 
@@ -53,20 +60,6 @@ app.controller('WordsController', function ($scope,$http,ngNotify,HttpService,AP
     $scope.autocompleteWords = function(){
         console.log($scope.searchText);
         listWords($scope.searchText);
-        //HttpService.getAjax('http://localhost:8000/api/vocabulary/words',callback);
     };
-
-    /* $scope.getLocation = function(val) {
-        return $http.get('//maps.googleapis.com/maps/api/geocode/json', {
-            params: {
-                address: val,
-                sensor: false
-            }
-        }).then(function(response){
-            return response.data.results.map(function(item){
-                return item.formatted_address;
-            });
-        });
-    };*/
 
 });

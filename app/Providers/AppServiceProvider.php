@@ -24,5 +24,6 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('WordRepository', '\App\Repository\WordRepository');
+        $this->app->singleton('SentenceRepository', '\App\Repository\SentenceRepository');
     }
 }

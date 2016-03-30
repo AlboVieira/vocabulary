@@ -31,6 +31,14 @@ class Repository implements RepositoryInterface
         //return $this->model-;
     }
 
+    public function save(array $data,$id = null){
+
+        if($id){
+            return $this->update($data,$id );
+        }
+        return $this->create($data);
+    }
+
     public function create(array $data)
     {
         $model = $this->model;

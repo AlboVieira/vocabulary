@@ -11,12 +11,13 @@ class WordRepository extends Repository
 {
     protected $model = 'App\\Models\\Words';
 
-    public function save(array $words,$id = null){
+    public function saveWord($data, $id = null){
 
-        if($id){
-            return $this->update($words,$id );
+        $exist = $this->getWordsByWord($data['word']);
+        if(empty($exist)){
+            return parent::save($data,$id);
         }
-        return $this->create($words);
+        return false;
     }
 
     public function getAllWords(){
@@ -25,7 +26,6 @@ class WordRepository extends Repository
     }
 
     public function getWordsByWord($word){
-
         $words = Words::where('word','LIKE', "%{$word}%")->get();
         return $this->getWordsAsArray($words);
     }
@@ -53,7 +53,5 @@ class WordRepository extends Repository
     public function getWordsKnow(){
        return  $this->findBy(Word::STATUS_FLD, Word::STATUS_KNOW_VAL);
     }
-
-
 
 }
