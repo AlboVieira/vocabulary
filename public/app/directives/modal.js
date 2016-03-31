@@ -36,9 +36,6 @@ app
             $(element).on('hidden.bs.modal', function () {
 
                 scope.$apply(function () {
-                    console.log(element);
-                    console.log(scope);
-
                     scope.$parent[attrs.visible] = false;
                 });
             });

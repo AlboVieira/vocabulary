@@ -41,28 +41,32 @@ app.controller('WordsController', function ($scope,$http,ngNotify,HttpService,AP
         }
     };
 
-    $scope.submit = function(){
-        var callback = function(json){
-           if(json.success == true){
-               listWords();
-               ngNotify.set('Operacao realizada com sucesso.');
-               $scope.showModal = false;
-           }else{
-               ngNotify.set('Erro ao realizar a operação.','error');
-           }
-        };
+    $scope.submit = function(isValid){
 
-        var url = 'http://localhost:8000/api/vocabulary/words/';
-        if($scope.data.id){
-            HttpService.postAjax(url + $scope.data.id,$scope.data,callback);
-         }else{
-            HttpService.postAjax(url,$scope.data,callback);
+        if(isValid){
+            var callback = function(json){
+                if(json.success == true){
+                    listWords();
+                    ngNotify.set('Operacao realizada com sucesso.');
+                    $scope.showModal = false;
+                }else{
+                    ngNotify.set('Erro ao realizar a operação.','error');
+                }
+            };
+
+            var url = 'http://localhost:8000/api/vocabulary/words/';
+            if($scope.data.id){
+                HttpService.postAjax(url + $scope.data.id,$scope.data,callback);
+            }else{
+                HttpService.postAjax(url,$scope.data,callback);
+            }
+            return true;
         }
+        return false;
 
     };
 
     $scope.autocompleteWords = function(){
-        console.log($scope.searchText);
         listWords($scope.searchText);
     };
 
