@@ -9,6 +9,8 @@
 namespace App\Constants;
 interface FormConstant
 {
+    const SELECIONE = '-- Selecione --';
+
     const BTN_SALVAR = 'btnSalvar';
     const BTN_SALVAR_LBL = 'Salvar';
 

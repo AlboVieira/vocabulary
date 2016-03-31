@@ -48,7 +48,7 @@ class WordsController extends Controller
     public function newWord(Request $request)
     {
         try{
-            $words = $this->wordRepository->saveWord($request->all());
+            $words = $this->wordRepository->createWord($request->all());
             if($words){
                 $json = response()->json(['success'=>true,'words' => $words]);
             }else{
@@ -63,7 +63,7 @@ class WordsController extends Controller
     public function updateWord(Request $request,$data)
     {
         try{
-            $words = $this->wordRepository->save($request->all(),$data);
+            $words = $this->wordRepository->updateWord($request->all(),$data);
             $json = response()->json(['success'=>true,'words' => $words]);
         }catch(Exception $e){
             $json = response()->json(['success'=>false,'erro' => $e->getMessage()]);

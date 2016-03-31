@@ -2,6 +2,9 @@
 
 namespace App\Repository;
 
+use App\Constants\SentenceConstant;
+use App\Constants\WordConstant;
+use App\Models\Sentences;
 use App\Models\TypeWord;
 use App\Models\Words;
 use App\Repository\Repository;
@@ -11,13 +14,55 @@ class WordRepository extends Repository
 {
     protected $model = 'App\\Models\\Words';
 
-    public function saveWord($data, $id = null){
+    public function createWord($data){
 
-        $exist = $this->getWordsByWord($data['word']);
+        $exist = $this->getWordsByWord($data[WordConstant::WORD_FLD]);
         if(empty($exist)){
-            return parent::save($data,$id);
+
+            $arrSentence = $data[SentenceConstant::SENTENCE_FLD];
+
+            unset($data[SentenceConstant::SENTENCE_FLD]);
+            unset($data['id_sentence']);
+
+            /** @var Words $model */
+            $model = parent::save($data);
+            if($model){
+                $this->createSentence($arrSentence,$model->id);
+                return $model;
+            }
+        }
+    }
+
+    public function updateWord($data, $id = null){
+
+        if($id){
+            $arrSentence = $data[SentenceConstant::SENTENCE_FLD];
+
+            unset($data[SentenceConstant::SENTENCE_FLD]);
+            unset($data['id_sentence']);
+
+            /** @var Words $model */
+            $model = parent::save($data,$id);
+
+            $this->createSentence($arrSentence,$id);
+            return $model;
         }
         return false;
+    }
+
+    public function createSentence($data,$idWord = null){
+
+        if(!empty($data[SentenceConstant::ID_FLD])){
+            $sentence = Sentences::where('id', '=', $data[SentenceConstant::ID_FLD]);
+        }else{
+            $sentence = new Sentences();
+        }
+
+        $sentenceArr = [
+            SentenceConstant::SENTENCE_FLD => $data,
+            SentenceConstant::WORD_FLD  => $idWord
+        ];
+        $sentence::create($sentenceArr);
     }
 
     public function getAllWords(){
@@ -35,6 +80,15 @@ class WordRepository extends Repository
             $wordsSeparated = [];
             /** @var Words $word */
             foreach($words as $word){
+
+                /** @var Sentences $sentences */
+                $sentences = null;
+                if($word->sentences()->getResults()->count() > 0){
+                    $result = $word->sentences()->getResults();
+                    //trocar depois
+                    $sentences = $result->first();
+                }
+
                 $typeWord = $word->typeWord()->getResults();
                 $wordsSeparated[$word->status][$word->id] = [
                     'id' => $word->id,
@@ -42,7 +96,9 @@ class WordRepository extends Repository
                     'status' => $word->status,
                     'meanning' => $word->meanning,
                     'typeId' => $typeWord->id,
-                    'type' => $typeWord->desc
+                    'type' => $typeWord->desc,
+                    'id_sentence' => !empty($sentences) ? $sentences->id : '',
+                    'sentence' => !empty($sentences) ? $sentences->sentence : ''
                 ];
             }
             return $wordsSeparated;

@@ -26,6 +26,8 @@ app.controller('WordsController', function ($scope,$http,ngNotify,HttpService,AP
         $scope.data.status = '0';
         $scope.data.meanning = '';
         $scope.data.id_tipo = '0';
+        $scope.data.id_sentence = '';
+        $scope.data.sentence = '';
 
         if(param != undefined){
 
@@ -34,6 +36,8 @@ app.controller('WordsController', function ($scope,$http,ngNotify,HttpService,AP
             $scope.data.status = param.status;
             $scope.data.meanning = param.meanning;
             $scope.data.id_tipo = param.typeId.toString();
+            $scope.data.id_sentence  = param.id_sentence != null ? param.id_sentence : '';
+            $scope.data.sentence  = param.sentence != null ? param.sentence : '';
         }
     };
 
